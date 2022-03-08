@@ -1,6 +1,7 @@
 #pragma once
 
 #include <vector>
+#include <algorithm>
 
 namespace GL {
 
@@ -13,8 +14,8 @@ protected:
     float z = 0;
 
 public:
-    Displayable(const float z_) : z { z_ } {}
-    virtual ~Displayable() {}
+    inline Displayable(float z_);
+    inline virtual ~Displayable();
 
     virtual void display() const = 0;
 
@@ -33,4 +34,11 @@ struct disp_z_cmp
 
 inline std::vector<const Displayable*> display_queue;
 
+GL::Displayable::Displayable(float z_) : z { z_ } { GL::display_queue.emplace_back(this); }
+GL::Displayable::~Displayable() {
+    GL::display_queue.erase(std::remove(GL::display_queue.begin(), GL::display_queue.end(), this), GL::display_queue.end());
+}
+
 } // namespace GL
+
+

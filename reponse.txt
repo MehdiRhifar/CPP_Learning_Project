@@ -1,0 +1,71 @@
+TASK_0
+A-Exécution
+
+    C -> Ajouter un avion
+    Q ou X -> Quitter le programme
+    F -> Plein écran
+
+    Quand on ajoute un avion, il apparait sur la fenêtre, atterrit dans l'aéroport puis repart.
+    Les informations dans la console nous indique les actions que fait l'avion avec son nom (il atterrit, fait un "entretien", puis redécolle)
+
+    Tous les avions font la même chose, même avec 4, mais on dirait que seulement 3 avions peuvent avoir une maintenance simultanément.
+
+B-Analyse du code
+    Aircraft -> représente un avion, donc son nom, son type, sa position etc..
+    Terminal -> représente un terminal dans l'aéroport
+    Airport ->  représente un aéroport avec tous les éléments qui le compose (Terminaux, Tower..)
+    AirportType -> champ de la classe Airport, permet d'avoir plus d'information sur les élements qui compose l'aéroport (Notamment la gestion des terminaux)
+    Tower -> Gère la gestion entre les Avions (Aircraft) et les Terminaux
+    TowerSimulation -> Gère toute la création de la simulation (création des avions, initialisation de l'aéroport, lancement de la simulation)
+    Waypoint -> Contiens des informations sur une position (Le point 3D + savoir si dans les airs, à terre, dans un terminal)
+
+Aircraft  :
+   const std::string& get_flight_num() const -> Renvoie le "numéro" de son avion (Qui est une chaine de caractère)
+   float distance_to(const Point3D& p) const -> Renvoie la distance entre l'avion et un Point3D p
+   void display() const -> Dessine l'avion
+   void move() -> Modifie la position de l'avion en fonction de ses parametre (sa vitesse, et sa derniere position)
+
+Tower :
+   WaypointQueue get_instructions(Aircraft& aircraft) -> En fonction de la position de l'avion (si dans un terminal, dans les airs etc..) Renvoie une deque de Waypoint indiquant les futures point que l'avion doit atteindre
+   void arrived_at_terminal(const Aircraft& aircraft) -> prmet de placer d'avion dans un terminal libre
+
+AirPort :
+   Tower& get_tower() -> Getter pour avoir la Tower associée à l'aeroport
+   void display() const -> Affiche graphiquement l'aeroport
+   void move() -> Applique move sur tous les terminaux de l'aeroport 
+
+Terminal :
+    bool in_use() const -> savoir si le terminal est utilisé par un avion
+    bool is_servicing() const -> savoir si l'avion dans le terminal est encore en maintenance (variable "service_process" < SERVICE_CYCLES qui est ne nombre de cycle pour l'entretien)
+    void assign_craft(const Aircraft& aircraft) -> assign un avion au terminal
+    void start_service(const Aircraft& aircraft) -> Commance l'entretien de l'avion, en placant la variable "service_process" à 0 car il s'agit du début de l'entretien et affiche un texte l'indiquant)
+    void finish_service() -> Si l'entretien est terminé, l'affiche et libere l'avion du terminal
+
+
+
+C.
+1.init_aircraft_types() et on change les vitesses
+2. Dans Opengl_interface -> ticks_per_sec
+si on veut mettre pause (donc frameRate à 0) le programme s'arrête
+Il faut donc utiliser une autre technique : ne plus appeller la fonction glutTimerFunc(0, timer, 0);
+Touche pour pause : " " (space)
+3. SERVICE_CYCLES dans config.hpp gere le temps de débarquement
+
+4.
+WaypointQueue Tower::get_instructions(Aircraft& aircraft) permets d'avoir les instructions pour un avion.
+Dans cette fonction, on regarde si l'avion est trop loin pour lui donner l'instruction de revenir.
+On pourrait modifier ici pour ne pas lui donner de nouvelle instruction, et le supprimer
+
+5.
+J'ai modifié le constructeur et destructeur de Displayable pour ajouter automatiquement dans display_queue.
+C'est moins intéressant pour DynamicObject, car il y a des DynamicObject qui ne sont pas dans move_queue (terminaux par exemple)
+Je trouve cependant ça étrange, j'ai donc elevé l'héritage pour la classe Terminal et j'ai fait la même chose.
+
+6. 
+On peut utiliser une map, avec comme clé un Aircraft et la value est le terminal
+
+D.
+1. C'est grace à l'instruction : friend class Tower;
+
+2. On ne peut pas passer Point3D par référence, car ce sont des points et donc on peut faire des calcules avec, dans l'appelle d'une fonction.
+Il n'y a donc pas de référence dans ce cas 

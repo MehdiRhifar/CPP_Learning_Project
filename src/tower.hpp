@@ -14,11 +14,12 @@ class Terminal;
 class Tower
 {
 private:
-    using AircraftToTerminal      = std::vector<std::pair<const Aircraft*, size_t>>;
+//    using AircraftToTerminal      = std::vector<std::pair<const Aircraft*, size_t>>;
+    using AircraftToTerminal      = std::unordered_map<const Aircraft*, size_t>;
     using AircraftAndTerminalIter = AircraftToTerminal::iterator;
 
     Airport& airport;
-    // aircrafts may reserve a terminal
+    // aircraft may reserve a terminal
     // if so, we need to save the terminal number in order to liberate it when the craft leaves
     AircraftToTerminal reserved_terminals = {};
 
@@ -26,8 +27,8 @@ private:
 
     AircraftAndTerminalIter find_craft_and_terminal(const Aircraft& aircraft)
     {
-        return std::find_if(reserved_terminals.begin(), reserved_terminals.end(),
-                            [&aircraft](const auto& x) { return x.first == &aircraft; });
+        return reserved_terminals.find(&aircraft);
+//        return std::find_if(reserved_terminals.begin(), reserved_terminals.end(), [&aircraft](const auto& x) { return x.first == &aircraft; });
     }
 
 public:

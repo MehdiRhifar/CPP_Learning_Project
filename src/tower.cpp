@@ -4,6 +4,7 @@
 #include "terminal.hpp"
 
 #include <cassert>
+#include <algorithm>
 
 WaypointQueue Tower::get_circle() const
 {
@@ -24,7 +25,8 @@ WaypointQueue Tower::get_instructions(Aircraft& aircraft)
             const auto vp = airport.reserve_terminal(aircraft);
             if (!vp.first.empty())
             {
-                reserved_terminals.emplace_back(&aircraft, vp.second);
+                reserved_terminals.insert_or_assign(&aircraft, vp.second);
+//                reserved_terminals.emplace_back(&aircraft, vp.second);
                 return vp.first;
             }
             else
@@ -34,7 +36,9 @@ WaypointQueue Tower::get_instructions(Aircraft& aircraft)
         }
         else
         {
-            return get_circle();
+            std::cout << "So far, have to be removed\n";
+            aircraft.toRemove();
+            return {};
         }
     }
     else

@@ -1,4 +1,5 @@
 #include "opengl_interface.hpp"
+#include "../airport.hpp"
 
 namespace GL {
 
@@ -45,6 +46,21 @@ void change_zoom(const float factor)
     handle_error("Zoom");
 }
 
+void increase_framerate() {
+    ticks_per_sec += 1;
+    std::cout << "framerate increased by 1 [value : " << ticks_per_sec << "]\n";
+}
+
+void decrease_framerate() {
+    if (ticks_per_sec > 1) {
+        ticks_per_sec -= 1;
+        std::cout << "framerate decreased by 1 [value : " << ticks_per_sec << "]\n";
+    }
+    else {
+        std::cout << "framerate already at minimum [value : " << ticks_per_sec << "]\n";
+    }
+}
+
 void reshape_window(int w, int h)
 {
     glViewport(0, 0, w, h);
@@ -73,12 +89,29 @@ void display(void)
 
 void timer(const int step)
 {
-    for (auto& item : move_queue)
-    {
-        item->move();
+    for (auto it = move_queue.begin(); it != move_queue.end();) {
+        (*it)->move();
+
+        Aircraft* itemAircraft = dynamic_cast<Aircraft*>(*it);
+        it++;
+        if (itemAircraft && itemAircraft->haveToRemove()) {
+            move_queue.erase(itemAircraft);
+            delete itemAircraft; // Fait automatiquement la suppression dans les listes
+        }
     }
+
     glutPostRedisplay();
-    glutTimerFunc(1000u / ticks_per_sec, timer, step + 1);
+    if (!pause) {
+        glutTimerFunc(1000u / ticks_per_sec, timer, step + 1);
+    }
+}
+
+void switch_pause() {
+    pause = !pause;
+    if (!pause) { //Pour relancer si on sort de la pause
+        glutTimerFunc(0, timer, 0);
+    }
+    std::cout << "value of pause : " << pause << std::endl;
 }
 
 void init_gl(int argc, char** argv, const char* title)

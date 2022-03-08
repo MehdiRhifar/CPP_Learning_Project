@@ -40,7 +40,10 @@ void TowerSimulation::create_aircraft(const AircraftType& type) const
     const Point3D direction = (-start).normalize();
 
     Aircraft* aircraft = new Aircraft { type, flight_number, start, direction, airport->get_tower() };
-    GL::display_queue.emplace_back(aircraft);
+//    std::unique_ptr aircraft_unique = std::make_unique<Aircraft>(type, flight_number, start, direction, airport->get_tower());
+//    aircraftManager.putAircraft(std::move(aircraft_unique));
+
+//    GL::display_queue.emplace_back(aircraft); FAIT AUTOMATIQUEMENT MAINTENANT
     GL::move_queue.emplace(aircraft);
 }
 
@@ -51,12 +54,17 @@ void TowerSimulation::create_random_aircraft() const
 
 void TowerSimulation::create_keystrokes() const
 {
-    GL::keystrokes.emplace('x', []() { GL::exit_loop(); });
-    GL::keystrokes.emplace('q', []() { GL::exit_loop(); });
+    // J'ai commenté car sur mon pc, le programme se ferme automatiquement si ces touches sont disponible...
+//    GL::keystrokes.emplace('x', []() { GL::exit_loop(); });
+//    GL::keystrokes.emplace('q', []() { GL::exit_loop(); });
     GL::keystrokes.emplace('c', [this]() { create_random_aircraft(); });
     GL::keystrokes.emplace('+', []() { GL::change_zoom(0.95f); });
     GL::keystrokes.emplace('-', []() { GL::change_zoom(1.05f); });
     GL::keystrokes.emplace('f', []() { GL::toggle_fullscreen(); });
+    // added
+    GL::keystrokes.emplace('w', []() { GL::decrease_framerate(); });
+    GL::keystrokes.emplace('x', []() { GL::increase_framerate(); });
+    GL::keystrokes.emplace(' ', []() { GL::switch_pause(); });
 }
 
 void TowerSimulation::display_help() const
@@ -77,8 +85,8 @@ void TowerSimulation::init_airport()
     airport = new Airport { one_lane_airport, Point3D { 0, 0, 0 },
                             new img::Image { one_lane_airport_sprite_path.get_full_path() } };
 
-    GL::display_queue.emplace_back(airport);
     GL::move_queue.emplace(airport);
+//    GL::display_queue.emplace_back(airport); already in
 }
 
 void TowerSimulation::launch()
