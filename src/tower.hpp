@@ -1,6 +1,7 @@
 #pragma once
 
 #include "waypoint.hpp"
+#include "aircraft_manager.hpp"
 
 #include <algorithm>
 #include <unordered_map>

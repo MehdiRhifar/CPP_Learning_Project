@@ -1,6 +1,5 @@
 #pragma once
 
-#include "GL/displayable.hpp"
 #include "aircraft_types.hpp"
 #include "config.hpp"
 #include "geometry.hpp"
@@ -10,7 +9,7 @@
 #include <string>
 #include <string_view>
 
-class Aircraft : public GL::Displayable, public GL::DynamicObject
+class Aircraft : public GL::Displayable
 {
 private:
     const AircraftType& type;
@@ -62,7 +61,7 @@ public:
     float distance_to(const Point3D& p) const { return pos.distance_to(p); }
 
     void display() const override;
-    void move() override;
+    void move();
     void toRemove() { _toRemove = true; }
     bool haveToRemove() const { return _toRemove; }
 

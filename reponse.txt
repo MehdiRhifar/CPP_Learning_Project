@@ -69,3 +69,8 @@ D.
 
 2. On ne peut pas passer Point3D par référence, car ce sont des points et donc on peut faire des calcules avec, dans l'appelle d'une fonction.
 Il n'y a donc pas de référence dans ce cas 
+
+TASK 1.
+1. C'est la GL::timer qui supprime les avions (Et la fonction move marque les avions à supprimer)
+2. move_queue et display_queue contiennent des références sur les avions
+3. On le supprime de la move_queue et on delete l'avion (qui supprime ensuite automatiquement de la dispay_queue)
