@@ -20,6 +20,8 @@ private:
     bool landing_gear_deployed = false; // is the landing gear deployed?
     bool is_at_terminal        = false;
     bool _toRemove = false;
+    bool served                = false;
+    int fuel;
 
     // turn the aircraft to arrive at the next waypoint
     // try to facilitate reaching the waypoint after the next by facing the
@@ -52,18 +54,29 @@ public:
         flight_number { flight_number_ },
         pos { pos_ },
         speed { speed_ },
-        control { control_ }
+        control { control_ },
+        fuel {rand() % (type_.MAX_FUEL - 50) + 50}
     {
         speed.cap_length(max_speed());
     }
+
+    ~Aircraft() { control.remove(*this); }
 
     const std::string& get_flight_num() const { return flight_number; }
     float distance_to(const Point3D& p) const { return pos.distance_to(p); }
 
     void display() const override;
     void move();
+    void refill(int& fuel_stock);
+
     void toRemove() { _toRemove = true; }
     bool haveToRemove() const { return _toRemove; }
+    bool has_terminal() const { return !waypoints.empty() && waypoints.back().is_at_terminal(); };
+    bool is_circling() const { return !served && !waypoints.empty() && !has_terminal(); };
+    bool is_low_on_fuel() const { return fuel < 200; }
+    int get_fuel() const { return fuel; }
+    int get_max_fuel() const { return type.MAX_FUEL; }
+    int is_served() const { return served; }
 
     friend class Tower;
 };

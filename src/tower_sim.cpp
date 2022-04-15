@@ -6,6 +6,7 @@
 #include "config.hpp"
 #include "img/image.hpp"
 #include "img/media_path.hpp"
+#include "aircraft_crash.hpp"
 
 #include <cassert>
 #include <cstdlib>
@@ -68,6 +69,19 @@ void TowerSimulation::create_keystrokes()
     GL::keystrokes.emplace('w', []() { GL::decrease_framerate(); });
     GL::keystrokes.emplace('x', []() { GL::increase_framerate(); });
     GL::keystrokes.emplace(' ', []() { GL::switch_pause(); });
+
+
+    GL::keystrokes.emplace('0', [this]() { aircraftFactory.print_number_airline(0); });
+    GL::keystrokes.emplace('1', [this]() { aircraftFactory.print_number_airline(1); });
+    GL::keystrokes.emplace('2', [this]() { aircraftFactory.print_number_airline(2); });
+    GL::keystrokes.emplace('3', [this]() { aircraftFactory.print_number_airline(3); });
+    GL::keystrokes.emplace('4', [this]() { aircraftFactory.print_number_airline(4); });
+    GL::keystrokes.emplace('5', [this]() { aircraftFactory.print_number_airline(5); });
+    GL::keystrokes.emplace('6', [this]() { aircraftFactory.print_number_airline(6); });
+    GL::keystrokes.emplace('7', [this]() { aircraftFactory.print_number_airline(7); });
+
+
+    GL::keystrokes.emplace('m', []() { std::cout << "number of crash  : " << AircraftCrash1::COUNT_CRASH << std::endl; });
 }
 
 void TowerSimulation::display_help() const
@@ -75,9 +89,9 @@ void TowerSimulation::display_help() const
     std::cout << "This is an airport tower simulator" << std::endl
               << "the following keysstrokes have meaning:" << std::endl;
 
-    for (const auto& ks_pair : GL::keystrokes)
+    for (const auto& [key, function] : GL::keystrokes)
     {
-        std::cout << ks_pair.first << ' ';
+        std::cout << key << ' ';
     }
 
     std::cout << std::endl;
@@ -86,7 +100,7 @@ void TowerSimulation::display_help() const
 void TowerSimulation::init_airport()
 {
     airport = new Airport { one_lane_airport, Point3D { 0, 0, 0 },
-                            new img::Image { one_lane_airport_sprite_path.get_full_path() } };
+                            new img::Image { one_lane_airport_sprite_path.get_full_path() }, aircraftManager };
 
     GL::move_queue.emplace(airport);
 //    GL::display_queue.emplace_back(airport); already in

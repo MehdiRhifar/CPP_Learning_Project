@@ -18,8 +18,12 @@ private:
     const AirportType& type;
     const Point3D pos;
     const GL::Texture2D texture;
+    const AircraftManager& aircraftManager;
     std::vector<Terminal> terminals;
     Tower tower;
+    int fuel_stock = 0;
+    int ordered_fuel = 0;
+    int next_refill_time = 0;
 
     // reserve a terminal
     // if a terminal is free, return
@@ -51,11 +55,12 @@ private:
     Terminal& get_terminal(const size_t terminal_num) { return terminals.at(terminal_num); }
 
 public:
-    Airport(const AirportType& type_, const Point3D& pos_, const img::Image* image, const float z_ = 1.0f) :
+    Airport(const AirportType& type_, const Point3D& pos_, const img::Image* image, const AircraftManager& aircraftManager_, const float z_ = 1.0f) :
         GL::Displayable { z_ },
         type { type_ },
         pos { pos_ },
         texture { image },
+        aircraftManager { aircraftManager_},
         terminals { type.create_terminals() },
         tower { *this }
     {}
@@ -66,8 +71,20 @@ public:
 
     void move() override
     {
+        if (next_refill_time == 0) {
+            fuel_stock += ordered_fuel;
+            std::cout << "fuel receive : " << ordered_fuel;
+            ordered_fuel = std::min(aircraftManager.get_required_fuel(), 5000);
+            next_refill_time = 100;
+            std::cout << " | Fuel in stock : " << fuel_stock << " | Ordered fuel : " << ordered_fuel << std::endl;
+        }
+        else {
+            next_refill_time--;
+        }
+
         for (auto& t : terminals)
         {
+            t.refill_aircraft_if_needed(fuel_stock);
             t.move();
         }
     }

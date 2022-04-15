@@ -23,16 +23,26 @@ public :
         create_aircraft(*(aircraft_types[rand() % 3]), airport, aircraftManager);
     }
 
+    void print_number_airline(int i) {
+        const std::string& airline = airlines[i];
+
+        int nb = std::count_if(all_flight_number.begin(), all_flight_number.end(),
+                   [airline](const std::string& item){return item.rfind(airline, 0) == 0;}
+                   );
+
+        std::cout << "Number of flight in " << airline << " : " << nb << std::endl;
+    }
+
 private:
     const std::string airlines[8] = { "AF", "LH", "EY", "DL", "KL", "BA", "AY", "EY" };
     static const size_t NUM_AIRCRAFT_TYPES = 3;
+    std::set<std::string> all_flight_number;
+
     const AircraftType* aircraft_types[NUM_AIRCRAFT_TYPES] {
         new AircraftType { .02f, .05f, .02f, MediaPath { "l1011_48px.png" } },
         new AircraftType { .02f, .05f, .02f, MediaPath { "b707_jat.png" } },
         new AircraftType { .03f, .08f, .03f, MediaPath { "concorde_af.png" } }
     };
-
-    std::set<std::string> all_flight_number;
 
     const std::string& get_flight_number() {
         auto res = all_flight_number.insert(airlines[std::rand() % 8] + std::to_string(1000 + (rand() % 9000)));
