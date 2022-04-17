@@ -13,7 +13,7 @@ struct AircraftType
     const float max_accel;
     const GL::Texture2D texture;
     const GL::Texture2D textureExplose;
-    const int MAX_FUEL = 60;
+    const int MAX_FUEL = 1000;
 
     AircraftType(const float max_ground_speed_, const float max_air_speed_, const float max_accel_,
                  const MediaPath& sprite, const size_t num_tiles = NUM_AIRCRAFT_TILES) :

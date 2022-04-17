@@ -14,7 +14,7 @@ B-Analyse du code
     Aircraft -> représente un avion, donc son nom, son type, sa position etc..
     Terminal -> représente un terminal dans l'aéroport
     Airport ->  représente un aéroport avec tous les éléments qui le compose (Terminaux, Tower..)
-    AirportType -> champ de la classe Airport, permet d'avoir plus d'information sur les élements qui compose l'aéroport (Notamment la gestion des terminaux)
+    AirportType -> champ de la classe Airport, permet d'avoir plus d'information sur les elements qui compose l'aéroport (Notamment la gestion des terminaux)
     Tower -> Gère la gestion entre les Avions (Aircraft) et les Terminaux
     TowerSimulation -> Gère toute la création de la simulation (création des avions, initialisation de l'aéroport, lancement de la simulation)
     Waypoint -> Contiens des informations sur une position (Le point 3D + savoir si dans les airs, à terre, dans un terminal)
@@ -38,16 +38,16 @@ Terminal :
     bool in_use() const -> savoir si le terminal est utilisé par un avion
     bool is_servicing() const -> savoir si l'avion dans le terminal est encore en maintenance (variable "service_process" < SERVICE_CYCLES qui est ne nombre de cycle pour l'entretien)
     void assign_craft(const Aircraft& aircraft) -> assign un avion au terminal
-    void start_service(const Aircraft& aircraft) -> Commance l'entretien de l'avion, en placant la variable "service_process" à 0 car il s'agit du début de l'entretien et affiche un texte l'indiquant)
-    void finish_service() -> Si l'entretien est terminé, l'affiche et libere l'avion du terminal
+    void start_service(const Aircraft& aircraft) -> Commence l'entretien de l'avion, en placant la variable "service_process" à 0 car il s'agit du début de l'entretien et affiche un texte l'indiquant)
+    void finish_service() -> Si l'entretien est terminé, l'affiche et libère l'avion du terminal
 
 
 
 C.
 1.init_aircraft_types() et on change les vitesses
 2. Dans Opengl_interface -> ticks_per_sec
-si on veut mettre pause (donc frameRate à 0) le programme s'arrête
-Il faut donc utiliser une autre technique : ne plus appeller la fonction glutTimerFunc(0, timer, 0);
+si on veut mettre pause (donc frameRate à 0) le programme s'arrête.
+Il faut donc utiliser une autre technique : ne plus appeler la fonction glutTimerFunc(0, timer, 0);
 Touche pour pause : " " (space)
 3. SERVICE_CYCLES dans config.hpp gere le temps de débarquement
 

@@ -18,7 +18,6 @@ void AircraftManager::move()
 
 
     for (auto it = aircrafts.begin(); it != aircrafts.end(); it++) {
-        std::cout << ((*it)->has_terminal() ? "true" : "false") << " / with Fuel : " << (*it)->get_fuel() << " | ";
         try
         {
             (*it)->move();
@@ -28,7 +27,6 @@ void AircraftManager::move()
             std::cerr << aircraftCrash.what() << std::endl;
         }
     }
-    std::cout << std::endl;
 
     auto result = std::remove_if(aircrafts.begin(), aircrafts.end(),
                    [](const std::unique_ptr<Aircraft>& item) { return item->haveToRemove(); });
