@@ -81,7 +81,7 @@ void TowerSimulation::create_keystrokes()
     GL::keystrokes.emplace('7', [this]() { aircraftFactory.print_number_airline(7); });
 
 
-    GL::keystrokes.emplace('m', []() { std::cout << "number of crash  : " << AircraftCrash1::COUNT_CRASH << std::endl; });
+    GL::keystrokes.emplace('m', []() { std::cout << "number of crash  : " << AircraftCrash::COUNT_CRASH << std::endl; });
 }
 
 void TowerSimulation::display_help() const

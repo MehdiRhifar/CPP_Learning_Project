@@ -92,14 +92,6 @@ void timer(const int step)
     for (auto it = move_queue.begin(); it != move_queue.end();) {
         (*it)->move();
         it++;
-
-
-//        Aircraft* itemAircraft = dynamic_cast<Aircraft*>(*it);
-//        it++;
-//        if (itemAircraft && itemAircraft->haveToRemove()) {
-//            move_queue.erase(itemAircraft);
-//            delete itemAircraft; // Fait automatiquement la suppression dans les listes
-//        }
     }
 
     glutPostRedisplay();

@@ -39,7 +39,9 @@ private:
     void arrive_at_terminal();
     // deploy and retract landing gear depending on next waypoints
     void operate_landing_gear();
-    void add_waypoint(const Waypoint& wp, const bool front);
+    template <const bool front>
+    void add_waypoint(const Waypoint& wp);
+
     bool is_on_ground() const { return pos.z() < DISTANCE_THRESHOLD; }
     float max_speed() const { return is_on_ground() ? type.max_ground_speed : type.max_air_speed; }
 
@@ -63,6 +65,7 @@ public:
     ~Aircraft() { control.remove(*this); }
 
     const std::string& get_flight_num() const { return flight_number; }
+    const AircraftType& get_type() const { return type; }
     float distance_to(const Point3D& p) const { return pos.distance_to(p); }
 
     void display() const override;
@@ -77,6 +80,7 @@ public:
     int get_fuel() const { return fuel; }
     int get_max_fuel() const { return type.MAX_FUEL; }
     int is_served() const { return served; }
+
 
     friend class Tower;
 };

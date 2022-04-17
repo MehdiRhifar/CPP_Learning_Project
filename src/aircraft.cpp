@@ -77,7 +77,8 @@ void Aircraft::operate_landing_gear()
     }
 }
 
-void Aircraft::add_waypoint(const Waypoint& wp, const bool front)
+template <const bool front>
+void Aircraft::add_waypoint(const Waypoint& wp)
 {
     if (front)
     {
@@ -93,7 +94,10 @@ void Aircraft::move()
 {
     if (waypoints.empty())
     {
-        waypoints = control.get_instructions(*this);
+        for (const auto& wp: control.get_instructions(*this))
+        {
+            add_waypoint<false>(wp);
+        }
     }
 
     if (is_circling()) {
@@ -128,7 +132,7 @@ void Aircraft::move()
             if (!landing_gear_deployed)
             {
                 using namespace std::string_literals;
-                throw AircraftCrash1 { flight_number, pos, speed.length(), "bad landing"s };
+                throw AircraftCrash { flight_number, pos, speed.length(), "bad landing"s };
             }
         }
         else
@@ -137,7 +141,7 @@ void Aircraft::move()
             if (--fuel <= 0) {
                 std::cout << "No more fuel in aircraft " << flight_number << std::endl;
                 toRemove();
-                throw AircraftCrash1 { flight_number, pos, speed.length(), "out of fuel" };
+                throw AircraftCrash { flight_number, pos, speed.length(), "out of fuel" };
             }
             // if we are in the air, but too slow, then we will sink!
             const float speed_len = speed.length();

@@ -1,6 +1,7 @@
 #include "aircraft_manager.hpp"
 #include "aircraft.hpp"
 #include "GL/dynamic_object.hpp"
+#include "aircraft_crash.hpp"
 #include <iostream>
 #include <algorithm>
 
