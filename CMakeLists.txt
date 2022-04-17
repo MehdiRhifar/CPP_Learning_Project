@@ -16,7 +16,7 @@ add_executable(tower
     src/aircraft_types.hpp
     src/aircraft.cpp
     src/aircraft.hpp
-    src/airport_type.hpp
+		src/airport_type.hpp
 	src/airport.hpp
 	src/config.hpp
 	src/geometry.hpp
@@ -28,7 +28,7 @@ add_executable(tower
 	src/tower.hpp
 	src/waypoint.hpp
 	src/main.cpp
-        src/aircraft_manager.h)
+		src/aircraft_manager.cpp src/aircraft_manager.hpp src/aircraft_factory.hpp src/aircraft_crash.hpp)
 
 ###################
 # Compile options #

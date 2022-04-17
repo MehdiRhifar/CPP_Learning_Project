@@ -1,6 +1,7 @@
 #include "aircraft.hpp"
 
 #include "GL/opengl_interface.hpp"
+#include "aircraft_crash.hpp"
 
 #include <cmath>
 
@@ -76,7 +77,8 @@ void Aircraft::operate_landing_gear()
     }
 }
 
-void Aircraft::add_waypoint(const Waypoint& wp, const bool front)
+template <const bool front>
+void Aircraft::add_waypoint(const Waypoint& wp)
 {
     if (front)
     {
@@ -92,7 +94,18 @@ void Aircraft::move()
 {
     if (waypoints.empty())
     {
-        waypoints = control.get_instructions(*this);
+        for (const auto& wp: control.get_instructions(*this))
+        {
+            add_waypoint<false>(wp);
+        }
+    }
+
+    if (is_circling()) {
+        WaypointQueue toTerminal = control.reserve_terminal(*this);
+        if (!toTerminal.empty()) {
+            std::cout <<"to terminal cause is circling" << std::endl;
+            waypoints = std::move(toTerminal);
+        }
     }
 
     if (!is_at_terminal)
@@ -100,7 +113,6 @@ void Aircraft::move()
         turn_to_waypoint();
         // move in the direction of the current speed
         pos += speed;
-
         // if we are close to our next waypoint, stike if off the list
         if (!waypoints.empty() && distance_to(waypoints.front()) < DISTANCE_THRESHOLD)
         {
@@ -120,11 +132,17 @@ void Aircraft::move()
             if (!landing_gear_deployed)
             {
                 using namespace std::string_literals;
-                throw AircraftCrash { flight_number + " crashed into the ground"s };
+                throw AircraftCrash { flight_number, pos, speed.length(), "bad landing"s };
             }
         }
         else
         {
+//            std::cout << "fuel" << fuel << std::endl;
+            if (--fuel <= 0) {
+                std::cout << "No more fuel in aircraft " << flight_number << std::endl;
+                toRemove();
+                throw AircraftCrash { flight_number, pos, speed.length(), "out of fuel" };
+            }
             // if we are in the air, but too slow, then we will sink!
             const float speed_len = speed.length();
             if (speed_len < SPEED_THRESHOLD)
@@ -138,7 +156,18 @@ void Aircraft::move()
     }
 }
 
+void Aircraft::refill(int& fuel_stock)
+{
+    assert(fuel_stock >= 0);
+    auto needed_fuel = std::min(type.MAX_FUEL - fuel, fuel_stock);
+    fuel += needed_fuel;
+    fuel_stock -= needed_fuel;
+    std::cout << flight_number << " refilled with " << needed_fuel << "L of fuel" << std::endl;
+    assert(fuel_stock >= 0);
+}
+
 void Aircraft::display() const
 {
     type.texture.draw(project_2D(pos), { PLANE_TEXTURE_DIM, PLANE_TEXTURE_DIM }, get_speed_octant());
 }
+
