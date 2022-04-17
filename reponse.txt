@@ -74,3 +74,11 @@ TASK 1.
 1. C'est la GL::timer qui supprime les avions (Et la fonction move marque les avions à supprimer)
 2. move_queue et display_queue contiennent des références sur les avions
 3. On le supprime de la move_queue et on delete l'avion (qui supprime ensuite automatiquement de la dispay_queue)
+
+
+
+Bonus : 
+Je ne savais pas qu'il fallait faire un rapport pour le projet, voici le TXT que j'ai utilisé pour répondre au question (Je pensais qu'il allait juste être utile pour moi, afin de mieux comprendre le code de base)
+
+Sinon pour faire simple j'ai bien aimé le projet, il était interressant, j'ai juste un petit problème sur la TASK2 - D - Réapprovisionnement. D'après moi avec l'algo proposé, il peut y avoir plusieurs demande pour un avion, si 2 demande ce font alors qu'il est toujours dans les airs, donc on "commande" plus de fuel que necessaire. C'est facilement modifiable mais j'ai choisi de laisser l'algo proposer, car il y avait surement une raison à cela (Ou j'ai mal compris celui ci ?) 
+Dans la globalité j'ai suivi les indications, il n'y avait pas trop de choix personnel à faire, je me suis permis d'ajouter quelque petite fonction comme une animation d'explosion quand un avion n'a plus de carburant ou est détruit, avec une classe qui hérite de Displayable qui permet de faire l'animation, quand on crée l'objet, et ce détruit quand celui si à fini l'animation (et la destruction supprime de la display_queue automatiquement). Au final il n'y a pas d'animation et j'ai juste mis une image d'explosion, c'était pas si compliqué mais comme non demandé je ne voulais pas perdre de temps sur ça.
